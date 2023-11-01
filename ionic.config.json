@@ -1,0 +1,8 @@
+{
+  "name": "Blazing trails",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "8ea15c0c"
+}
