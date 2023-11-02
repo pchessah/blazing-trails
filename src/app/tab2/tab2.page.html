@@ -9,10 +9,10 @@
 
   <ion-content [fullscreen]="true">
     <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Inventory</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <ion-toolbar>
+        <ion-title size="large">Inventory</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
     <ion-content color="light">
       <section class="add-item">
@@ -20,12 +20,24 @@
       </section>
       <section class="inventory-list">
         <ion-list *ngIf="itemList.length; else noItems" [inset]="true">
-          <ion-item *ngFor="let item of itemList">
-            <ion-row>
-              <ion-col><ion-label>{{item.name}}</ion-label></ion-col>
-              <ion-col>-</ion-col>
-              <ion-col><ion-label>{{item.quantity}}</ion-label></ion-col>
-            </ion-row> 
+          <ion-item *ngFor="let item of itemList;index as i; trackBy: trackBy">
+            <ion-row class="item-row">
+
+              <ng-container *ngIf="indexToEdit == i;">
+
+              </ng-container>
+
+              <ng-container *ngIf="indexToEdit !== i; else editTemplate">
+                <ion-col><ion-label>{{item.name}}</ion-label></ion-col>
+                <ion-col>
+                  <ion-label>{{item.quantity}}</ion-label>
+                </ion-col>
+                <ion-col>
+
+                  <ion-button (click)="setEditMode(item, i)">Edit</ion-button>
+                </ion-col>
+              </ng-container>
+            </ion-row>
           </ion-item>
         </ion-list>
       </section>
@@ -46,8 +58,8 @@
           <ion-content class="ion-padding">
             <ion-card>
               <ion-card-content>
-                <ion-input label="Item name" label-placement="floating" fill="outline"  (ionInput)="onInput($event, 'item')"
-                  placeholder="Enter item name"></ion-input>
+                <ion-input label="Item name" label-placement="floating" fill="outline"
+                  (ionInput)="onInput($event, 'item')" placeholder="Enter item name"></ion-input>
                 <ion-input label="Item quantity" label-placement="floating" fill="outline"
                   placeholder="Enter item quantity" type="number" (ionInput)="onInput($event, 'qty')"></ion-input>
               </ion-card-content>
@@ -67,7 +79,20 @@
 <ng-template #noItems>
   <ion-card color="warning">
     <ion-card-header>
-      <ion-card-title class="title">  No Items in the inventory</ion-card-title>
+      <ion-card-title class="title"> No Items in the inventory</ion-card-title>
     </ion-card-header>
   </ion-card>
+</ng-template>
+
+<ng-template #editTemplate>
+  <ion-input label="Item name" [value]="itemToEdit.name" label-placement="floating" fill="outline" (ionInput)="onEditInput($event, 'item')"
+    placeholder="Enter item name"></ion-input>
+    
+  <ion-input [value]="itemToEdit.quantity" label="Item quantity" label-placement="floating" fill="outline" placeholder="Enter item quantity"
+    type="number" (ionInput)="onEditInput($event, 'qty')"></ion-input>
+
+  <ion-button (click)="changeQuantitityOfItemToEdit('+')" size="small">+</ion-button> <ion-button (click)="changeQuantitityOfItemToEdit('-')" size="small">-</ion-button>
+
+  <ion-button (click)="doneEditing()" size="small">Done</ion-button>
+
 </ng-template>

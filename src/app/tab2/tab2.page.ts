@@ -15,6 +15,8 @@ export class Tab2Page {
 
   item: IItem = {} as any;
   itemList: IItem[] = [];
+  indexToEdit!: number
+  itemToEdit!: IItem;
 
   constructor(private _cd:ChangeDetectorRef){}
 
@@ -39,10 +41,42 @@ export class Tab2Page {
   onInput(event: CustomEvent, input: 'qty' | 'item'){
   
     if(input === 'qty'){
-      this.item['quantity'] = event.detail.value;
+      this.item['quantity'] = Number(event.detail.value);
     } else if (input === 'item'){
       this.item['name'] = event.detail.value.toLowerCase();
     }
+  }
+
+  
+  onEditInput(event: CustomEvent, input: 'qty' | 'item'){
+  
+    if(input === 'qty'){
+      this.itemToEdit['quantity'] = Number(event.detail.value);
+    } else if (input === 'item'){
+      this.itemToEdit['name'] = event.detail.value.toLowerCase();
+    }
+  }
+
+  doneEditing(){
+    this.itemList.filter(i => i.name !== this.itemToEdit.name).push(this.itemToEdit);
+    this.indexToEdit = null as any
+  }
+
+  changeQuantitityOfItemToEdit(addOrSubtract: "+" | "-"){
+    if(addOrSubtract === '+'){
+       this.itemToEdit.quantity++;
+    }else if(addOrSubtract === '-' && this.itemToEdit['quantity'] > 0){
+       this.itemToEdit.quantity--;
+    }
+  }
+
+  trackBy(index: number, item: IItem):string {
+    return item.name;
+  }
+
+  setEditMode(item: IItem, index:number) {
+    this.indexToEdit = index;
+    this.itemToEdit = item;
   }
 
 }

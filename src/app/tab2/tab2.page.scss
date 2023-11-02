@@ -5,3 +5,16 @@
 .title{
   text-align: center;
 }
+
+.item-row{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-row ion-col{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
