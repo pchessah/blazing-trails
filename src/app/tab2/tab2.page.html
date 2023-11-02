@@ -23,18 +23,13 @@
           <ion-item *ngFor="let item of itemList;index as i; trackBy: trackBy">
             <ion-row class="item-row">
 
-              <ng-container *ngIf="indexToEdit == i;">
-
-              </ng-container>
-
               <ng-container *ngIf="indexToEdit !== i; else editTemplate">
                 <ion-col><ion-label>{{item.name}}</ion-label></ion-col>
                 <ion-col>
                   <ion-label>{{item.quantity}}</ion-label>
                 </ion-col>
                 <ion-col>
-
-                  <ion-button (click)="setEditMode(item, i)">Edit</ion-button>
+                  <ion-button color="warning" (click)="setEditMode(item, i)"><ion-icon name="create"></ion-icon></ion-button>
                 </ion-col>
               </ng-container>
             </ion-row>
@@ -91,8 +86,10 @@
   <ion-input [value]="itemToEdit.quantity" label="Item quantity" label-placement="floating" fill="outline" placeholder="Enter item quantity"
     type="number" (ionInput)="onEditInput($event, 'qty')"></ion-input>
 
-  <ion-button (click)="changeQuantitityOfItemToEdit('+')" size="small">+</ion-button> <ion-button (click)="changeQuantitityOfItemToEdit('-')" size="small">-</ion-button>
+  <ion-button color="secondary" (click)="changeQuantitityOfItemToEdit('+')" size="small">+</ion-button>
+  
+  <ion-button color="danger" (click)="changeQuantitityOfItemToEdit('-')" size="small">-</ion-button>
 
-  <ion-button (click)="doneEditing()" size="small">Done</ion-button>
+  <ion-button (click)="doneEditing()" size="small">✔</ion-button>
 
 </ng-template>

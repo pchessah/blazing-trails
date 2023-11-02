@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "blazing-trails-cd66e": {
+      "hosting": {
+        "app": [
+          "blazing-trails-cd66e"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "blazing-trails-cd66e"
+  }
+}
