@@ -1,54 +1,73 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Inventory
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<div class="ion-page">
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title class="ion-padding">
+        Inventory
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Inventory</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-content color="light">
-    <section class="inventory-list">
-      <ion-list [inset]="true">
-        <ion-item>
-          <ion-label>Pokémon Yellow</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>Mega Man X</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>The Legend of Zelda</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>Pac-Man</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label>Super Mario World</ion-label>
-        </ion-item>
-      </ion-list>
-    </section>
+    <ion-content color="light">
+      <section class="add-item">
+        <ion-button id="open-modal" color="success" expand="block">Add item</ion-button>
+      </section>
+      <section class="inventory-list">
+        <ion-list *ngIf="itemList.length; else noItems" [inset]="true">
+          <ion-item *ngFor="let item of itemList">
+            <ion-row>
+              <ion-col><ion-label>{{item.name}}</ion-label></ion-col>
+              <ion-col>-</ion-col>
+              <ion-col><ion-label>{{item.quantity}}</ion-label></ion-col>
+            </ion-row> 
+          </ion-item>
+        </ion-list>
+      </section>
 
-    <section class="add-item">
-      <ion-button  color="success" expand="block">Add item</ion-button>
-    </section>
+      <ion-modal #modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button (click)="cancel()">Cancel</ion-button>
+              </ion-buttons>
+              <ion-title>Enter item details</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <ion-card>
+              <ion-card-content>
+                <ion-input label="Item name" label-placement="floating" fill="outline"  (ionInput)="onInput($event, 'item')"
+                  placeholder="Enter item name"></ion-input>
+                <ion-input label="Item quantity" label-placement="floating" fill="outline"
+                  placeholder="Enter item quantity" type="number" (ionInput)="onInput($event, 'qty')"></ion-input>
+              </ion-card-content>
+            </ion-card>
 
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button>
-        <ion-icon name="chevron-up-circle"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="top">
-        <ion-fab-button>
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-    </ion-fab>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
 
-    
+
+    </ion-content>
+
+
   </ion-content>
-</ion-content>
+</div>
+
+<ng-template #noItems>
+  <ion-card color="warning">
+    <ion-card-header>
+      <ion-card-title class="title">  No Items in the inventory</ion-card-title>
+    </ion-card-header>
+  </ion-card>
+</ng-template>
