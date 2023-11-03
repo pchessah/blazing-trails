@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { IItem } from '../interfaces/item.interface';
+import { InventoryFireStoreService } from '../services/inventory-firestore.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab2',
@@ -16,7 +18,11 @@ export class Tab2Page {
   item: IItem = {} as any;
   itemList: IItem[] = [];
   indexToEdit!: number
-  itemToEdit!: IItem;
+  itemToEdit: IItem =  {} as any;
+
+  private _inventoryFireStoreService:InventoryFireStoreService = inject(InventoryFireStoreService);
+
+  inventoryList$:Observable<IItem[]> = this._inventoryFireStoreService.getinventory()
 
   constructor(private _cd:ChangeDetectorRef){}
 
@@ -32,18 +38,20 @@ export class Tab2Page {
   onWillDismiss(event: Event) {
     const ev = event as CustomEvent<OverlayEventDetail<IItem>>;
     if (ev.detail.role === 'confirm' && !!this.item) {
-      this.itemList.push(this.item)
-      this.item = {} as any
-      this._cd.detectChanges()
+      this._inventoryFireStoreService.createInventory(this.item).then(res => {
+        this.item = {} as any
+        this._cd.detectChanges()
+      })
     }
   }
 
   onInput(event: CustomEvent, input: 'qty' | 'item'){
   
     if(input === 'qty'){
-      this.item['quantity'] = Number(event.detail.value);
+      this.item.quantity = Number(event.detail.value);
     } else if (input === 'item'){
-      this.item['name'] = event.detail.value.toLowerCase();
+      this.item.name = event.detail.value.toLowerCase();
+      this.item.id = event.detail.value.toLowerCase();
     }
   }
 
@@ -51,15 +59,17 @@ export class Tab2Page {
   onEditInput(event: CustomEvent, input: 'qty' | 'item'){
   
     if(input === 'qty'){
-      this.itemToEdit['quantity'] = Number(event.detail.value);
+      this.itemToEdit.quantity = Number(event.detail.value);
     } else if (input === 'item'){
-      this.itemToEdit['name'] = event.detail.value.toLowerCase();
+      this.itemToEdit.name = event.detail.value.toLowerCase();
     }
   }
 
   doneEditing(){
-    this.itemList.filter(i => i.name !== this.itemToEdit.name).push(this.itemToEdit);
-    this.indexToEdit = null as any
+    this._inventoryFireStoreService.updateInventory(this.itemToEdit).then(() => {
+      this.indexToEdit = null as any;
+      this.itemToEdit = {} as any;
+    })
   }
 
   changeQuantitityOfItemToEdit(addOrSubtract: "+" | "-"){
