@@ -24,12 +24,19 @@
             <ion-row class="item-row">
 
               <ng-container *ngIf="indexToEdit !== i; else editTemplate">
+
                 <ion-col><ion-label>{{item.name}}</ion-label></ion-col>
+
                 <ion-col>
                   <ion-label>{{item.quantity}}</ion-label>
                 </ion-col>
+                
                 <ion-col>
                   <ion-button color="warning" (click)="setEditMode(item, i)"><ion-icon name="create"></ion-icon></ion-button>
+                </ion-col>
+
+                <ion-col>
+                  <ion-button color="danger" (click)="deleteInventory(item)"><ion-icon name="trash-outline"></ion-icon></ion-button>
                 </ion-col>
               </ng-container>
             </ion-row>

@@ -21,10 +21,9 @@ export class Tab2Page {
   itemToEdit: IItem =  {} as any;
 
   private _inventoryFireStoreService:InventoryFireStoreService = inject(InventoryFireStoreService);
+  private _cd:ChangeDetectorRef = inject(ChangeDetectorRef);
 
   inventoryList$:Observable<IItem[]> = this._inventoryFireStoreService.getinventory()
-
-  constructor(private _cd:ChangeDetectorRef){}
 
   cancel() {
     this.item = undefined as any;
@@ -87,6 +86,12 @@ export class Tab2Page {
   setEditMode(item: IItem, index:number) {
     this.indexToEdit = index;
     this.itemToEdit = item;
+  }
+
+  deleteInventory(item:IItem){
+    this._inventoryFireStoreService.deleteInventory(item).then(() => {
+      this.itemList = this.itemList.filter(i => i.id!== item.id);
+    })
   }
 
 }
