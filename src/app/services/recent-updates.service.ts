@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, collectionData, doc, setDoc } from '@angular/fire/firestore';
 import { IRecentUpdate } from '../interfaces/recent-update.interface';
 import { Observable, map } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({providedIn: 'root'})
 
 export class RecentUpdatesService {
 
   private _firestore: Firestore = inject(Firestore);
+  private _alertController: AlertController = inject(AlertController);
 
   addRecentUpdate(message:string):Promise<void> {
     const _date = new Date().getTime()
@@ -16,6 +18,7 @@ export class RecentUpdatesService {
       message: message,
       id: String(_date)
     }
+    this._presentAlert(message)
     return (setDoc(document, _recentUpdate));
    }
 
@@ -26,6 +29,15 @@ export class RecentUpdatesService {
       map(recentUpdates => recentUpdates as IRecentUpdate[]),
       map(recentUpdates => recentUpdates.sort((a,b) => Number(b.id) - Number(a.id)).slice(0, 3)),
     );
+  }
+
+  private async _presentAlert(message:string){
+    const alert = await this._alertController.create({
+      header: 'Recent Updates',
+      message: message,
+      buttons: ['Dismiss']
+    });
+    await alert.present();
   }
 
   
