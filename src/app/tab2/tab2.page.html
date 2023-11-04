@@ -82,18 +82,26 @@
 </ng-template>
 
 <ng-template #editTemplate>
-  <ion-input label="Item name" [value]="itemToEdit.name" label-placement="floating" fill="outline" (ionInput)="onEditInput($event, 'item')"
-    placeholder="Enter item name"></ion-input>
-
-    <br />
-    
-  <ion-input [value]="itemToEdit.quantity" label="Item quantity" label-placement="floating" fill="outline" placeholder="Enter item quantity"
-    type="number" (ionInput)="onEditInput($event, 'qty')"></ion-input>
-
-  <ion-button color="secondary" (click)="changeQuantitityOfItemToEdit('+')" size="small">+</ion-button>
+  <div class="ion-padding">
+    <ion-input label="Item name" [value]="itemToEdit.name" label-placement="floating" fill="outline" (ionInput)="onEditInput($event, 'item')"
+      placeholder="Enter item name"></ion-input>
   
-  <ion-button color="danger" (click)="changeQuantitityOfItemToEdit('-')" size="small">-</ion-button>
+      <br />
+      
+    <ion-input [value]="itemToEdit.quantity" label="Item quantity" label-placement="floating" fill="outline" placeholder="Enter item quantity"
+      type="number" (ionInput)="onEditInput($event, 'qty')"></ion-input>
+      
 
-  <ion-button (click)="doneEditing()" size="small">✔</ion-button>
+      <ion-row class="item-row">
+        <ion-button color="secondary" (click)="changeQuantitityOfItemToEdit('+')" size="small">+</ion-button>
+        
+        <ion-button color="danger" (click)="changeQuantitityOfItemToEdit('-')" size="small">-</ion-button>
+      
+        <ion-button (click)="doneEditing()" size="small">✔</ion-button>
+
+      </ion-row>
+  
+
+  </div>
 
 </ng-template>
