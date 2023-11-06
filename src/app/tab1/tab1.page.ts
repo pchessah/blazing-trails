@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { RecentUpdate } from '../interfaces/recent-update.interface';
 import { InventoryFireStoreService } from '../services/inventory-firestore.service';
 import { Inventory } from '../interfaces/item.interface';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-tab1',
@@ -14,6 +15,7 @@ export class Tab1Page {
 
   private _recentUpdateService:RecentUpdatesService = inject(RecentUpdatesService);
   private _inventoryFiresStoreService:InventoryFireStoreService = inject(InventoryFireStoreService);
+  public authService: AuthenticationService =  inject(AuthenticationService);
 
   recentUpdates$: Observable<RecentUpdate[]> = this._recentUpdateService.getRecentUpdates();
   lowInventory$: Observable<Inventory[]> = this._inventoryFiresStoreService.lowInventory$;
