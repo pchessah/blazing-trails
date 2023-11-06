@@ -1,4 +1,4 @@
-export interface IItem {
+export interface Inventory {
   name: string;
   quantity: number;
   id:string;

@@ -1,4 +1,4 @@
-export interface IRecentUpdate {
+export interface RecentUpdate {
   message: string;
   id:string;
 }

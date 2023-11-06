@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, collectionData, doc, setDoc } from '@angular/fire/firestore';
-import { IRecentUpdate } from '../interfaces/recent-update.interface';
+import { RecentUpdate } from '../interfaces/recent-update.interface';
 import { Observable, map } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 
@@ -22,11 +22,11 @@ export class RecentUpdatesService {
     return (setDoc(document, _recentUpdate));
    }
 
-   getRecentUpdates(): Observable<IRecentUpdate[]> {
+   getRecentUpdates(): Observable<RecentUpdate[]> {
     const recentUpdateCollection = collection(this._firestore, 'recent-updates');
     return collectionData(recentUpdateCollection, {idField: 'id'})
     .pipe(
-      map(recentUpdates => recentUpdates as IRecentUpdate[]),
+      map(recentUpdates => recentUpdates as RecentUpdate[]),
       map(recentUpdates => recentUpdates.sort((a,b) => Number(b.id) - Number(a.id)).slice(0, 3)),
     );
   }

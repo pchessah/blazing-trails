@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { IItem } from '../interfaces/item.interface';
+import { Inventory } from '../interfaces/item.interface';
 import { InventoryFireStoreService } from '../services/inventory-firestore.service';
 import { Observable } from 'rxjs';
 
@@ -15,15 +15,15 @@ export class Tab2Page {
 
   @ViewChild(IonModal) modal!: IonModal;
 
-  item: IItem = {} as any;
-  itemList: IItem[] = [];
+  item: Inventory = {} as any;
+  itemList: Inventory[] = [];
   indexToEdit!: number
-  itemToEdit: IItem =  {} as any;
+  itemToEdit: Inventory =  {} as any;
 
   private _inventoryFireStoreService:InventoryFireStoreService = inject(InventoryFireStoreService);
   private _cd:ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  inventoryList$:Observable<IItem[]> = this._inventoryFireStoreService.getinventory()
+  inventoryList$:Observable<Inventory[]> = this._inventoryFireStoreService.getinventory()
 
   cancel() {
     this.item = undefined as any;
@@ -35,7 +35,7 @@ export class Tab2Page {
   }
 
   onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<IItem>>;
+    const ev = event as CustomEvent<OverlayEventDetail<Inventory>>;
     if (ev.detail.role === 'confirm' && !!this.item) {
       this._inventoryFireStoreService.createInventory(this.item).then(res => {
         this.item = {} as any
@@ -79,16 +79,16 @@ export class Tab2Page {
     }
   }
 
-  trackBy(index: number, item: IItem):string {
+  trackBy(index: number, item: Inventory):string {
     return item.name;
   }
 
-  setEditMode(item: IItem, index:number) {
+  setEditMode(item: Inventory, index:number) {
     this.indexToEdit = index;
     this.itemToEdit = item;
   }
 
-  deleteInventory(item:IItem){
+  deleteInventory(item:Inventory){
     this._inventoryFireStoreService.deleteInventory(item).then(() => {
       this.itemList = this.itemList.filter(i => i.id!== item.id);
     })
