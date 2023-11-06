@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PasswordResetPageRoutingModule } from './password-reset-routing.module';
 
 import { PasswordResetPage } from './password-reset.page';
+import { AuthenticationService } from '../services/authentication.service';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { PasswordResetPage } from './password-reset.page';
     IonicModule,
     PasswordResetPageRoutingModule
   ],
-  declarations: [PasswordResetPage]
+  declarations: [PasswordResetPage],
+  providers: [AuthenticationService]
 })
 export class PasswordResetPageModule {}

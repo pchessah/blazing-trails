@@ -14,7 +14,7 @@ export class RegistrationPage implements OnInit {
   ) {}
   ngOnInit() {}
 
-  signUp(email: { value: any; }, password: { value: any; }){
+  signUp(email:any, password: any){
     this.authService.RegisterUser(email.value, password.value)
     .then((res) => {
       // Do something here
