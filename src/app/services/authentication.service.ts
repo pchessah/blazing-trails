@@ -10,14 +10,18 @@ import {
 	createUserWithEmailAndPassword,
 	signOut
 } from '@angular/fire/auth';
+import { AlertController, LoadingController } from '@ionic/angular';
+
 @Injectable({
   providedIn: 'root',
 })
 
 export class AuthenticationService {
+  private _alertController: AlertController = inject(AlertController);
   userData: any;
   private afStore: Firestore = inject(Firestore);
   private afAuth: Auth = inject(Auth);
+  private loadingCtrl: LoadingController = inject(LoadingController);
 
   constructor(public router: Router,
               public ngZone: NgZone) { }
@@ -25,12 +29,25 @@ export class AuthenticationService {
 
   // Login in with email/password
   SignIn(email: any, password: any) {
-    return signInWithEmailAndPassword(this.afAuth, email, password);
+    this.showLoading()
+    return signInWithEmailAndPassword(this.afAuth, email, password).then(()=>{
+      this._presentAlert("signed in successfully")
+      this.loadingCtrl.dismiss()
+    }).catch((e) => {
+      this._presentAlert(e)
+      this.loadingCtrl.dismiss()
+    });
   }
   // Register user with email/password
   RegisterUser(email: any, password: any) {
+    this.showLoading()
     return createUserWithEmailAndPassword(this.afAuth, email, password).then(data => {
+      this._presentAlert("registered successfully")
       this.SetUserData(data.user)
+      this.loadingCtrl.dismiss()
+    }).catch((e) => {
+      this._presentAlert(e)
+      this.loadingCtrl.dismiss()
     });
   }
   // Email verification when new user register
@@ -73,8 +90,32 @@ export class AuthenticationService {
   }
   // Sign-out
   SignOut() {
+    this.showLoading()
     return signOut(this.afAuth).then(()=>{
+      this._presentAlert("logged out successfully")
       this.router.navigate(['/login'])
+      window.location.reload()
+      this.loadingCtrl.dismiss()
+    }).catch((e) => {
+      this._presentAlert(e)
+      this.loadingCtrl.dismiss()
     })
+  }
+
+  private async _presentAlert(message:string){
+    const alert = await this._alertController.create({
+      header: 'Recent Updates',
+      message: message,
+      buttons: ['Dismiss']
+    });
+    await alert.present();
+  }
+
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Loading...'
+    });
+
+    loading.present();
   }
 }

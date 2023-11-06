@@ -3,6 +3,7 @@ import { Firestore, collection, collectionData, doc, setDoc } from '@angular/fir
 import { RecentUpdate } from '../interfaces/recent-update.interface';
 import { Observable, map } from 'rxjs';
 import { AlertController } from '@ionic/angular';
+import { Auth } from '@angular/fire/auth';
 
 @Injectable({providedIn: 'root'})
 
@@ -10,10 +11,12 @@ export class RecentUpdatesService {
 
   private _firestore: Firestore = inject(Firestore);
   private _alertController: AlertController = inject(AlertController);
+  private afAuth: Auth = inject(Auth);
+  currentUserId = this.afAuth.currentUser?.uid
 
   addRecentUpdate(message:string):Promise<void> {
     const _date = new Date().getTime()
-    const document = doc(collection(this._firestore, 'recent-updates'), String(_date));
+    const document = doc(collection(this._firestore,`users/${this.currentUserId}/recent-updates`), String(_date));
     const _recentUpdate = {
       message: message,
       id: String(_date)
@@ -23,7 +26,7 @@ export class RecentUpdatesService {
    }
 
    getRecentUpdates(): Observable<RecentUpdate[]> {
-    const recentUpdateCollection = collection(this._firestore, 'recent-updates');
+    const recentUpdateCollection = collection(this._firestore,`users/${this.currentUserId}/recent-updates`);
     return collectionData(recentUpdateCollection, {idField: 'id'})
     .pipe(
       map(recentUpdates => recentUpdates as RecentUpdate[]),
