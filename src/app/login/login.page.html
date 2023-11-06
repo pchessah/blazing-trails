@@ -22,26 +22,16 @@
       >
     </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-button
-        expand="block"
-        color="warning"
-        [routerLink]="['/password-reset']"
-      >
-        Password Reset
-      </ion-button>
-    </ion-col>
-  </ion-row>
+
   <ion-row>
     <ion-col>
       <ion-button
         type="submit"
         color="danger"
-        (click)="authService.GoogleAuth()"
+        [routerLink]="['/registration']"
         expand="block"
       >
-        Login with Google
+        Go to sign up
       </ion-button>
     </ion-col>
   </ion-row>

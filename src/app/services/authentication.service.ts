@@ -13,56 +13,33 @@ import {
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthenticationService {
   userData: any;
   private afStore: Firestore = inject(Firestore);
   private afAuth: Auth = inject(Auth);
 
-  constructor(
+  constructor(public router: Router,
+              public ngZone: NgZone) { }
 
-    public router: Router,
-    public ngZone: NgZone
-  ) {
-    // this.ngFireAuth.authState.subscribe((user) => {
-    //   if (user) {
-    //     this.userData = user;
-    //     localStorage.setItem('user', JSON.stringify(this.userData));
-    //     JSON.parse(localStorage.getItem('user') || '{}');
-    //   } else {
-    //     localStorage.setItem('user', null || '{}');
-    //     JSON.parse(localStorage.getItem('user') || '{}');
-    //   }
-    // });
-  }
+
   // Login in with email/password
   SignIn(email: any, password: any) {
     return signInWithEmailAndPassword(this.afAuth, email, password);
   }
   // Register user with email/password
   RegisterUser(email: any, password: any) {
-    return createUserWithEmailAndPassword(this.afAuth, email, password);
+    return createUserWithEmailAndPassword(this.afAuth, email, password).then(data => {
+      this.SetUserData(data.user)
+    });
   }
   // Email verification when new user register
-  SendVerificationMail() {
-    // return this.ngFireAuth.currentUser.then((user: any) => {
-    //   return user.sendEmailVerification().then(() => {
-    //     this.router.navigate(['login']);
-    //   });
-    // });
-  }
+  SendVerificationMail() { }
+
   // Recover password
-  PasswordRecover(passwordResetEmail: any) {
-    // return this.ngFireAuth
-    //   .sendPasswordResetEmail(passwordResetEmail)
-    //   .then(() => {
-    //     window.alert(
-    //       'Password reset email has been sent, please check your inbox.'
-    //     );
-    //   })
-    //   .catch((error) => {
-    //     window.alert(error);
-    //   });
-  }
+  PasswordRecover(passwordResetEmail: any) { }
+
+
   // Returns true when user is looged in
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -78,19 +55,8 @@ export class AuthenticationService {
     return this.AuthLogin(new auth.GoogleAuthProvider());
   }
   // Auth providers
-  AuthLogin(provider: any) {
-    // return this.ngFireAuth
-    //   .signInWithPopup(provider)
-    //   .then((result) => {
-    //     this.ngZone.run(() => {
-    //       this.router.navigate(['dashboard']);
-    //     });
-    //     this.SetUserData(result.user);
-    //   })
-    //   .catch((error) => {
-    //     window.alert(error);
-    //   });
-  }
+  AuthLogin(provider: any) { }
+
   // Store user in localStorage
   SetUserData(user: any) {
     const userRef = doc(this.afStore , `users/`, user.uid);
@@ -107,6 +73,8 @@ export class AuthenticationService {
   }
   // Sign-out
   SignOut() {
-    return signOut(this.afAuth)
+    return signOut(this.afAuth).then(()=>{
+      this.router.navigate(['/login'])
+    })
   }
 }

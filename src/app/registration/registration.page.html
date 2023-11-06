@@ -21,5 +21,15 @@
       <ion-button type="submit" (click)="signUp(email, password)" expand="block">Register</ion-button>
       </ion-col>
     </ion-row>
+    <ion-col>
+      <ion-button
+        type="submit"
+        color="danger"
+        [routerLink]="['/login']"
+        expand="block"
+      >
+        Go to log in
+      </ion-button>
+    </ion-col>
   </form>
 </ion-content>
